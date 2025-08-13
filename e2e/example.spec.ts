@@ -5,18 +5,31 @@ async function login(page){
   await page.goto('https://www.saucedemo.com/');
   await page.locator(('[data-test="username"]')).fill('standard_user');
   await page.locator(('[data-test="password"]')).fill('secret_sauce');
-  await page.locator('[data-test="login-button"]').click();
+  await page.locator('button', { name: 'Login' }).click();
 
    
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeAll(async ({ page }) => {
   await login(page);
 });
 
 
-test('TC-Verify Products-001', async ({ page }) => {
+test('TC-LOGIN-001 - Login exitoso en SauceDemo', async ({ page }) => {
+  // Paso 1: Abrir la página
+  await page.goto('https://www.saucedemo.com/');
+  await expect(page.locator('[data-test="username"]')).toBeVisible();
+  await expect(page.locator('[data-test="password"]')).toBeVisible();
 
+  // Paso 2: Ingresar usuario
+  await page.fill('[data-test="username"]', 'standard_user');
+  await expect(page.locator('[data-test="username"]')).toHaveValue('standard_user');
+
+  // Paso 3: Ingresar contraseña
+  await page.fill('[data-test="password"]', 'secret_sauce');
+
+  // Paso 4: Click en login
+  await page.click('[data-test="login-button"]');
 
   // Paso 5: Verificar Products
   await expect(page.locator('.title')).toHaveText('Products');
